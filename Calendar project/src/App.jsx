@@ -9,14 +9,14 @@ function App() {
 
   const addEvent = (event) => {
     setEvents((prevEvents) => [...prevEvents, event]);
-  };
+  }; 
 
   return (
-    <div className="max-h-full">
+    <div className="max-h-full max-w-full">
       {/* NavBar at the top */}
       <NavBar />
       {/* Main content area with grid layout */}
-      <div className="grid grid-cols-12 gap-4 p-4">
+      <div className="grid grid-cols-12 gap-5 p-4">
         {/* EventBar on the left (col-span-3) */}
         <div className="col-span-3">
           <EventBar events={events} onAddEvent={addEvent} />

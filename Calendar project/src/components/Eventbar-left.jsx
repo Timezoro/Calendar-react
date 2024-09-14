@@ -5,13 +5,14 @@ const EventBar = ({ events, onAddEvent }) => {
   const [eventName, setEventName] = useState('');
   const [eventDate, setEventDate] = useState('');
   const [eventTime, setEventTime] = useState('');
-
+  const [eventDesciption,setEventDesciption] = useState('');
   const handleAddEvent = () => {
-    if (eventName && eventDate && eventTime) {
-      onAddEvent({ name: eventName, date: eventDate, time: eventTime });
+    if (eventName && eventDate && eventTime && eventDesciption) {
+      onAddEvent({ name: eventName, date: eventDate, time: eventTime, desc: eventDesciption });
       setEventName('');
       setEventDate('');
       setEventTime('');
+      setEventDesciption('')
       setShowAddEventForm(false);  // Hide the form after adding an event
     }
   };
@@ -42,8 +43,15 @@ const EventBar = ({ events, onAddEvent }) => {
             value={eventTime}
             onChange={(e) => setEventTime(e.target.value)}
           />
+          <input
+              type="text"
+              placeholder="Description"
+              className="p-2 border rounded mb-2 w-full"
+              value={eventDesciption}
+              onChange={(e) => setEventDesciption(e.target.value)}  // Corrected "onChange"
+          />
           <button
-            className="bg-cyan-500 text-white px-4 py-2 rounded mt-2 w-full"
+            className="bg-red-500 text-white px-4 py-2 rounded mt-2 w-full"
             onClick={handleAddEvent}
           >
             Add Event
@@ -63,7 +71,7 @@ const EventBar = ({ events, onAddEvent }) => {
             <ul className="mt-4">
               {events.map((event, index) => (
                 <li key={index} className="border-b border-gray-300 py-2">
-                  <strong>{event.name}</strong> - {event.date} at {event.time}
+                  <strong>{event.name}</strong> - {event.date} at {event.time} until
                 </li>
               ))}
             </ul>
