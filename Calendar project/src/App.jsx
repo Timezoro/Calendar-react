@@ -13,16 +13,19 @@ function App() {
 
   return (
     <div className="max-h-full max-w-full">
-      {/* NavBar at the top */}
-      <NavBar />
-      {/* Main content area with grid layout */}
+      {/* Part 1: NavBar at the top */}
+      <div className="w-full">
+        <NavBar />
+      </div>
+
+      {/* Part 2: Main content area with grid layout */}
       <div className="grid grid-cols-12 gap-5 p-4">
-        {/* EventBar on the left (col-span-3) */}
+        {/* Part 3: EventBar on the left */}
         <div className="col-span-3">
           <EventBar events={events} onAddEvent={addEvent} />
         </div>
 
-        {/* Calendar in the main section (col-span-9) */}
+        {/* Part 4: Calendar in the main section */}
         <div className="col-span-9">
           <Calendar events={events} />
         </div>

@@ -36,7 +36,7 @@ const Calendar = () => {
     }
 
     // Next month's dates
-    for (let i = 1; i <= 7 - lastDayIndex; i++) {
+    for (let i = 1; i <= 7 - lastDayIndex - 1; i++) {
       const nextDate = new Date(currentYear, currentMonth + 1, i);
       datesHTML += `<div class="date inactive">${nextDate.getDate()}</div>`;
     }
@@ -80,26 +80,23 @@ const Calendar = () => {
     <div className="calendar-container">
         {/* Calendar Header */}
         <div className="calendar-header flex items-center justify-between mb-4">
-        <button id="todayBtn" onClick={handleTodayClick} className="bg-gray-300 p-2 rounded ">
-          Today
-        </button>
-        <button id="prevBtn" onClick={handlePrevClick} className="bg-gray-300 p-2 rounded">
-          Prev
-        </button>
-        <div id="monthYear" className="text-lg font-bold"></div>
-        <button id="nextBtn" onClick={handleNextClick} className="bg-gray-300 p-2 rounded">
-          Next
-        </button>
+          <button id="prevBtn" onClick={handlePrevClick} className=" p-2 rounded hover:text-red-500 font-semibold">
+            Prev
+          </button>
+          <div id="monthYear" className="text-lg font-bold"></div>
+          <button id="nextBtn" onClick={handleNextClick} className=" p-2 rounded hover:text-red-500 font-semibold">
+            Next
+          </button>
         </div>
 
         {/* Calendar Dates */}
         <div className = "w-full h-full">
-        <div className="grid grid-cols-7 gap-2 text-center">
-            {days.map((day) => (
-                <div key={day} className="date font-bold">{day}</div>
-            ))}
-        </div>
-            <div id="dates" className="grid grid-cols-7 gap-2 text-center" dangerouslySetInnerHTML={{ __html: datesHTML }}></div>
+          <div className="grid grid-cols-7 gap-2 text-center pb-5">
+              {days.map((day) => (
+                  <div key={day} className="date font-extrabold ">{day}</div>
+              ))}
+          </div >
+          <div id="dates" className = "grid grid-cols-7 gap-2 text-center" dangerouslySetInnerHTML={{ __html: datesHTML }}></div>
         </div> 
     </div>
   );
