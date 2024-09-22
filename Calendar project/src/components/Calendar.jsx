@@ -1,60 +1,73 @@
 import React, { useState, useEffect } from 'react';
 
-const Calendar = () => {
+const Calendar = ({ events }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [datesHTML, setDatesHTML] = useState('');
+  const [calendarDays, setCalendarDays] = useState([]);
 
   // Function to update the calendar
   const updateCalendar = () => {
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth();
 
-    const firstDay = new Date(currentYear, currentMonth, 1); // Corrected from 0 to 1
+    const firstDay = new Date(currentYear, currentMonth, 1);
     const lastDay = new Date(currentYear, currentMonth + 1, 0);
     const totalDays = lastDay.getDate();
     const firstDayIndex = firstDay.getDay();
     const lastDayIndex = lastDay.getDay();
 
-    const monthYearString = currentDate.toLocaleString('default', {
-      month: 'long',
-      year: 'numeric',
-    });
-
-    let datesHTML = '';
+    let days = [];
 
     // Previous month's dates
     for (let i = firstDayIndex; i > 0; i--) {
       const prevDate = new Date(currentYear, currentMonth, 0 - i + 1);
-      datesHTML += `<div class="date inactive">${prevDate.getDate()}</div>`;
+      days.push({
+        date: prevDate.getDate(),
+        fullDate: prevDate.toDateString(),
+        isActive: false,
+        isInactive: true, // Mark as inactive
+      });
     }
 
     // Current month's dates
     for (let i = 1; i <= totalDays; i++) {
       const date = new Date(currentYear, currentMonth, i);
-      const activeClass = date.toDateString() === new Date().toDateString() ? 'active' : '';
-      datesHTML += `<div class="date ${activeClass}">${i}</div>`;
+      days.push({
+        date: i,
+        fullDate: date.toDateString(),
+        isActive: date.toDateString() === new Date().toDateString(),
+        isInactive: false,
+      });
     }
 
     // Next month's dates
     for (let i = 1; i <= 7 - lastDayIndex - 1; i++) {
       const nextDate = new Date(currentYear, currentMonth + 1, i);
-      datesHTML += `<div class="date inactive">${nextDate.getDate()}</div>`;
+      days.push({
+        date: nextDate.getDate(),
+        fullDate: nextDate.toDateString(),
+        isActive: false,
+        isInactive: true, // Mark as inactive
+      });
     }
 
     // Ensure 6 rows in the calendar
-    let currentLine = datesHTML.match(/<div class="date/g)?.length / 7 || 0;
-    const lastDate = parseInt(datesHTML.match(/<div class="date inactive">(\d+)<\/div>$/)?.[1] || 0);
+    let currentLine = days.length / 7;
+    const lastDate = days[days.length - 1].date;
 
     while (currentLine < 6) {
       for (let i = 1; i <= 7; i++) {
         const nextDate = new Date(currentYear, currentMonth + 1, lastDate + i);
-        datesHTML += `<div class="date inactive">${nextDate.getDate()}</div>`;
+        days.push({
+          date: nextDate.getDate(),
+          fullDate: nextDate.toDateString(),
+          isActive: false,
+          isInactive: true,
+        });
       }
       currentLine++;
     }
 
-    setDatesHTML(datesHTML);
-    document.getElementById('monthYear').textContent = monthYearString;
+    setCalendarDays(days);
   };
 
   // Effect to update the calendar when currentDate changes
@@ -76,28 +89,54 @@ const Calendar = () => {
   };
 
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  // Check if there are events for a particular day
+  const hasEvents = (fullDate) => {
+    return events.some((event) => new Date(event.date).toDateString() === fullDate);
+  };
+
   return (
     <div className="calendar-container">
-        {/* Calendar Header */}
-        <div className="calendar-header flex items-center justify-between mb-4">
-          <button id="prevBtn" onClick={handlePrevClick} className=" p-2 rounded hover:text-red-500 font-semibold">
-            Prev
-          </button>
-          <div id="monthYear" className="text-lg font-bold"></div>
-          <button id="nextBtn" onClick={handleNextClick} className=" p-2 rounded hover:text-red-500 font-semibold">
-            Next
-          </button>
+      {/* Calendar Header */}
+      <div className="calendar-header flex items-center justify-between mb-4">
+        <button id="prevBtn" onClick={handlePrevClick} className="p-2 rounded hover:text-red-500 font-semibold">
+          Prev
+        </button>
+        <div id="monthYear" className="text-lg font-bold">
+          {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
         </div>
+        <button id="nextBtn" onClick={handleNextClick} className="p-2 rounded hover:text-red-500 font-semibold">
+          Next
+        </button>
+      </div>
 
-        {/* Calendar Dates */}
-        <div className = "w-full h-full">
-          <div className="grid grid-cols-7 gap-2 text-center pb-5">
-              {days.map((day) => (
-                  <div key={day} className="date font-extrabold ">{day}</div>
-              ))}
-          </div >
-          <div id="dates" className = "grid grid-cols-7 gap-2 text-center" dangerouslySetInnerHTML={{ __html: datesHTML }}></div>
-        </div> 
+      {/* Calendar Dates */}
+      <div className="w-full h-full">
+        <div className="grid grid-cols-7 gap-5 text-center pb-3">
+          {days.map((day) => (
+            <div key={day} className="date font-extrabold">{day}</div>
+          ))}
+        </div>
+        <div id="dates" className="grid grid-cols-7 gap-5 text-center cursor-pointer">
+          {/* Loop through calendarDays to render the dates */}
+          {calendarDays.map((day, index) => (
+            <div
+              key={index}
+              className={`date p-6 ${day.isActive ? ' text-red-500 font-bold' : ''} ${
+                day.isInactive ? 'text-gray-400' : ''
+              }`}
+            >
+              {day.date}
+              {/* Display a dot if there are events on this date */}
+              {hasEvents(day.fullDate) && (
+                <div className="flex justify-center ">
+                  <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
