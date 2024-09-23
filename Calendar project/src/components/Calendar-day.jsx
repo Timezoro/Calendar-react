@@ -41,17 +41,19 @@ const CalendarDay = ({ events }) => {
   const handleNextDay = () => {
     setSelectedDay(new Date(selectedDay.setDate(selectedDay.getDate() + 1)));
   };
-
+ 
   return (
+
     <div className="w-full h-full p-4 ">
       {/* Header with Prev/Next buttons */}
-      <div className="flex space-x-20 mb-4 justify-center ">
-        <button onClick={handlePrevDay} className="hover:text-red-500 ">Prev</button>
-        <h2 className="text-2xl font-bold ">
-          {selectedDay.toLocaleString('default', { weekday: 'long' })}, {selectedDay.getDate()}
-        </h2>
+      <div className="mb-5 flex items-center justify-center text-center space-x-10">
+        <button onClick={handlePrevDay} className="hover:text-red-500">Prev</button>
+        <span className="text-2xl font-bold px-4 py-2 w-64">
+          {selectedDay.toLocaleString('default', { weekday: 'long' })}, {selectedDay.getDate()} {selectedDay.toLocaleString('default', { month: 'long' })} {selectedDay.getFullYear()}
+        </span>
         <button onClick={handleNextDay} className="hover:text-red-500">Next</button>
       </div>
+
 
       <div className="grid grid-cols-12 gap-5 ">
         {/* Left side: Time slots with hour separator lines */}
