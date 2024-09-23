@@ -4,41 +4,41 @@ import NavBar from './components/Navbar-top';
 import EventBar from './components/Eventbar-left';
 import Calendar from './components/Calendar';
 import CalendarWeek from './components/Calendar-week';
+import CalendarDay from './components/Calendar-day';
+import CalendarYear from './components/Calendar-year';
 import './index.css'; // Import Tailwind CSS file
+
+
 
 // Component to wrap the main content logic
 function MainContent({ events, addEvent }) {
-  const location = useLocation();
-
-  // Check if the current route is "/Calendar-week"
-  const isCalendarWeek = location.pathname === '/Calendar-week';
-
   return (
     <div>
-      {/* Conditionally render Part 2 based on the route */}
-      {!isCalendarWeek && (
-        <div className="grid grid-cols-12 gap-5 p-4">
-          {/* Part 3: EventBar on the left */}
-          <div className="col-span-3">
-            <EventBar events={events} onAddEvent={addEvent} />
-          </div>
-
-          {/* Part 4: Calendar in the main section */}
-          <div className="col-span-9">
-            <Calendar events={events} />
-          </div>
-        </div>
-      )}
-      
-      {/* Calendar-week content is shown through routing */}
+      {/* Grid layout for pages that aren't Calendar-week */}
       <Routes>
-        <Route path="/Calendar-week" element={<CalendarWeek events={events} />} />
-        <Route path="/about" element={<div>About Page</div>} />
-        <Route path="/contact" element={<div>Contact Page</div>} />
+        <Route 
+          path="/" 
+          element={
+            <div className="grid grid-cols-12 gap-5 p-4 ">
+              <div className="col-span-3">
+                <EventBar events={events} onAddEvent={addEvent} />
+              </div>
+              <div className="col-span-9">
+                <Calendar events={events} />
+              </div>
+            </div>
+          } 
+        />
+        {/* Calendar-week and other pages */}
+        <Route path="/Calendar-week" element={<CalendarWeek events= {events}/>}/>
+        <Route path = "/Calendar" element = {<Calendar events = {events}/>} />
+        <Route path="/Calendar-year" element={<CalendarYear events = {events}/>}/>
+        <Route path="/Calendar-day" element={<CalendarDay events = {events}/>}/>
       </Routes>
     </div>
   );
 }
+
 
 function App() {
   const [events, setEvents] = useState([]);

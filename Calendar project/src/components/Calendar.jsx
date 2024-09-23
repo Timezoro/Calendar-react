@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-const Calendar = ({ events }) => {
+const Calendar = ({ events, onAddEvent }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [calendarDays, setCalendarDays] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null); // Store the clicked date
 
   // Function to update the calendar
   const updateCalendar = () => {
@@ -122,15 +123,16 @@ const Calendar = ({ events }) => {
           {calendarDays.map((day, index) => (
             <div
               key={index}
-              className={`date p-6 ${day.isActive ? ' text-red-500 font-bold' : ''} ${
+              onClick={() => handleDateClick(day.fullDate)} // Click handler to add event
+              className={`date p-6 ${day.isActive ? ' text-red-500 font-bold ' : ''} ${
                 day.isInactive ? 'text-gray-400' : ''
-              }`}
+              } hover:text-red-500`}
             >
               {day.date}
               {/* Display a dot if there are events on this date */}
               {hasEvents(day.fullDate) && (
                 <div className="flex justify-center ">
-                  <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                  <span className="w-1 h-1 bg-red-400 rounded-full mt-2"></span>
                 </div>
               )}
             </div>

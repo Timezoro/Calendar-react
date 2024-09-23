@@ -20,7 +20,7 @@ const EventBar = ({ events, onAddEvent }) => {
   };
 
   return (
-    <div className="p-4 bg-gray-200 rounded-lg shadow-md h-50">
+    <div className="p-5 bg-gray-200 rounded-lg shadow-md h-50 ">
       <h2 className="text-xl font-bold mb-2">Scheduled Events</h2>
       {/* Show Add Event Form or List of Events */}
       {showAddEventForm ? (
@@ -80,16 +80,16 @@ const EventBar = ({ events, onAddEvent }) => {
           {events.length === 0 ? (
             <p className="text-gray-500">No events scheduled.</p>
           ) : (
-            <ul className="mt-4">
+            <ul className="mt-4 ">
               {events.map((event, index) => (
-                <li key={index} className="border-b border-gray-300 py-2 h-full">
-                  <strong>{event.name}</strong> - <span className = "">{event.date} at {event.time_start} until {event.time_end}</span>
+                <li key={index} className="border-b border-gray-300 py-2 h-full hover:shadow-md cursor-pointer">
+                  <strong class= "">{event.name}</strong>  <span className = "font-semibold">{event.date} </span> <br /> <span>at {event.time_start} until {event.time_end}</span>
                 </li>
               ))}
             </ul>
           )}
           <button
-            className="bg-red-600 text-white px-4 py-2 rounded mt-4 w-full hover:bg-neutral-600"
+            className="bg-red-600 text-white px-4 py-2 rounded mt-4 w-full hover:bg-neutral-600 "
             onClick={() => setShowAddEventForm(true)}
           >
             Add Event
