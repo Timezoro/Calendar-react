@@ -32,7 +32,6 @@ function MainContent({ events, addEvent }) {
         {/* Calendar-week and other pages */}
         <Route path="/Calendar-week" element={<CalendarWeek events= {events}/>}/>
         <Route path = "/Calendar" element = {<Calendar events = {events}/>} />
-        <Route path="/Calendar-year" element={<CalendarYear events = {events}/>}/>
         <Route path="/Calendar-day" element={<CalendarDay events = {events}/>}/>
       </Routes>
     </div>

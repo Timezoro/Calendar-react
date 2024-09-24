@@ -19,7 +19,24 @@ const CalendarDay = ({ events }) => {
   const generateTimeSlots = () => {
     let slots = [];
     for (let i = 0; i < 24; i++) {
-      const timeLabel = i < 10 ? `0${i}:00` : `${i}:00`;
+      const timeLabel = i < 10 ? (
+        <>
+          <span>0{i}:00</span>
+          <br />
+          <br />
+          <br />
+          <span>0{i}:30</span>
+        </>
+      ) : (
+        <>
+          <span>{i}:00</span>
+          <br />
+          <br />
+          <br />
+          <span>{i}:30</span>
+          {i===23 && <span> <br /> <br /> <br /> 00:00</span> }
+        </>
+      );
       slots.push(timeLabel);
     }
     return slots;
@@ -27,12 +44,13 @@ const CalendarDay = ({ events }) => {
 
   const timeSlots = generateTimeSlots();
 
-  const getEventPosition = (event) => {
-    const startHour = new Date(`1970-01-01T${event.startTime}:00`).getHours();
-    const endHour = new Date(`1970-01-01T${event.endTime}:00`).getHours();
-    const duration = endHour - startHour;
+  function getEventPosition(event) {
+    const startHour = new Date(event.startTime).getHours(); // ดึงค่า start hour
+    const endHour = new Date(event.endTime).getHours(); // ดึงค่า end hour
+    const duration = endHour - startHour; // คำนวณระยะเวลา
+
     return { startHour, duration };
-  };
+  }
 
   const handlePrevDay = () => {
     setSelectedDay(new Date(selectedDay.setDate(selectedDay.getDate() - 1)));
@@ -48,41 +66,39 @@ const CalendarDay = ({ events }) => {
       {/* Header with Prev/Next buttons */}
       <div className="mb-5 flex items-center justify-center text-center space-x-10">
         <button onClick={handlePrevDay} className="hover:text-red-500">Prev</button>
-        <span className="text-2xl font-bold px-4 py-2 w-64">
-          {selectedDay.toLocaleString('default', { weekday: 'long' })}, {selectedDay.getDate()} {selectedDay.toLocaleString('default', { month: 'long' })} {selectedDay.getFullYear()}
+        <span className="text-2xl font-bold px-4 py-2 w-56">
+          {selectedDay.toLocaleString('default', { weekday: 'long' })}, 
+          {selectedDay.getDate()} {selectedDay.toLocaleString('default', 
+          { month: 'long' })} {selectedDay.getFullYear()}
         </span>
         <button onClick={handleNextDay} className="hover:text-red-500">Next</button>
       </div>
 
 
       <div className="grid grid-cols-12 gap-5 ">
-        {/* Left side: Time slots with hour separator lines */}
-        <div className="col-span-2 border-r pr-4 relative">
-          <div className="space-y-2">
+        
+        <div className="col-span-12 relative w-full ">
+          {/* Hour separator lines */}
+          <div className="space-y-10 pl-2 pt-1 ">
             {timeSlots.map((slot, index) => (
-              <div key={index} className="relative">
-                <div className="text-sm text-gray-500">{slot}</div>
-                <div className="border-t border-gray-300 absolute left-0 w-full top-full"></div>
+              <div key={index} className="relative w-full">
+                <div className="text-sm text-gray-500 h-30">{slot}</div>
               </div>
+              
             ))}
           </div>
-        </div>
-
-        {/* Right side: Events grid with hour separator lines */}
-        <div className="col-span-10 relative">
-          {/* Hour separator lines */}
           {timeSlots.map((_, index) => (
             <div
               key={index}
               className="border-t border-gray-300 absolute left-0 w-full"
-              style={{ top: `${index * 4}rem` }}
+              style={{ top: `${index * 3}rem`, height: '1px'  }} // ปรับความสูงของเส้น
             ></div>
           ))}
 
           {/* Show events at the correct time slot */}
           {groupedEvents[formatDate(selectedDay)] &&
             groupedEvents[formatDate(selectedDay)].map((event, index) => {
-              const { startHour, duration } = getEventPosition(event);
+              const { startHour, duration } = getEventPosition(event); // คำนวณตำแหน่ง event
               return (
                 <div
                   key={index}

@@ -13,11 +13,7 @@ const NavBar = () => {
         </div>        
         {/* Navigation Links */}
         <ul className="flex space-x-6">
-          <li>
-            <Link to="/Calendar-year" className="text-gray-400 hover:text-gray-200">
-              Year
-            </Link>
-          </li>
+
           <li>
             <Link to="/" className="text-gray-400 hover:text-gray-200">
               Month
