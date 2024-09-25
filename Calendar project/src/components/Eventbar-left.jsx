@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Button from '@mui/material/Button';
+
 const EventBar = ({ events, onAddEvent }) => {
   const [showAddEventForm, setShowAddEventForm] = useState(false);
   const [eventName, setEventName] = useState('');
