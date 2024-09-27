@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import NavBar from './components/Navbar-top';
 import EventBar from './components/Eventbar-left';
 import Calendar from './components/Calendar';
 import CalendarWeek from './components/Calendar-week';
 import CalendarDay from './components/Calendar-day';
-import CalendarYear from './components/Calendar-year';
-import './index.css'; // Import Tailwind CSS file
-
+import useAppointments from './hooks/useAppointments';
 
 
 // Component to wrap the main content logic
@@ -42,9 +40,29 @@ function MainContent({ events, addEvent }) {
 function App() {
   const [events, setEvents] = useState([]);
 
+  const {getAppointments, addAppointment, deleteAppointment} = useAppointments();
+
+  useEffect(() => {
+    getAppointments()
+    .then((data) => {
+      setEvents(data)
+    })
+    
+  }, [deleteAppointment, addAppointment]);
+
+
+
   const addEvent = (event) => {
     setEvents((prevEvents) => [...prevEvents, event]);
+
+    addAppointment(event)
+
   };
+
+  const handleDateClick = (date) => {
+    console.log(date);
+  }
+
 
   return (
     <div className="h-screen w-screen">

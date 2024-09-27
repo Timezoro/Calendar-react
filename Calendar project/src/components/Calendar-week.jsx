@@ -53,6 +53,7 @@ const CalendarWeek = ({ events }) => {
       {/* Navigation buttons for week */}
       <div className="flex justify-between mb-4">
         <button onClick={handlePrevWeek} className="hover:text-red-500 ">Prev </button>
+        <h2 className="text-2xl font-bold">Week of {weekDates[0].dayName}, {weekDates[0].dayNumber}</h2>
         <button onClick={handleNextWeek} className="hover:text-red-500">Next </button>
       </div>
 

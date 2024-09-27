@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import EventBar from './Eventbar-left';
 
 const CalendarDay = ({ events }) => {
   const [selectedDay, setSelectedDay] = useState(new Date()); // Start with the current day
-
   const formatDate = (date) => date.toDateString();
 
   const groupEventsByDate = () => {
@@ -20,15 +20,15 @@ const CalendarDay = ({ events }) => {
     let slots = [];
     for (let i = 0; i < 24; i++) {
       const timeLabel = i < 10 ? (
-        <>
+        <div className='text-sm text-gray-500'>
           <span className="w-full inline-block border-b-2 border-gray-300 hover:text-red-500">0{i}:00</span>
           <br />
           <br />
           <br />
           <span className="w-full inline-block border-b-2 border-gray-100 hover:text-red-500">0{i}:30</span>
-        </>
+        </div>
       ) : (
-        <>
+        <div className='text-sm text-gray-500'>
           <span className="w-full inline-block border-b-2 border-gray-300 hover:text-red-500">{i}:00</span>
           <br />
           <br />
@@ -39,10 +39,10 @@ const CalendarDay = ({ events }) => {
               <br />
               <br />
               <br />
-              <span className="w-full inline-block border-b-2 border-gray-300 ">00:00</span>
+              <span className="w-full inline-block border-b-2 border-gray-300">00:00</span>
             </span>
           )}
-        </>
+        </div>
       );
       slots.push(timeLabel);
     }
@@ -81,50 +81,54 @@ const CalendarDay = ({ events }) => {
   };
 
   return (
-    <div className="w-full h-full p-4">
-      {/* Header with Prev/Next buttons */}
-      <div className="mb-5 flex items-center justify-center text-center space-x-10">
-        <button onClick={handlePrevDay} className="hover:text-red-500">Prev</button>
-        <span className="text-2xl font-bold px-4 py-2 w-56">
-          {selectedDay.toLocaleString('default', { weekday: 'long' })}, 
-          {selectedDay.getDate()} {selectedDay.toLocaleString('default', 
-          { month: 'long' })} {selectedDay.getFullYear()}
-        </span>
-        <button onClick={handleNextDay} className="hover:text-red-500">Next</button>
+    <div className="flex h-screen">
+      <div className='w-1/5 pt-4 '>
+        {/* <EventBar events={events} /> */}
       </div>
+      <div className ="w-4/5 overflow-auto p-3 cursor-pointer"> 
+      {/* Header with Prev/Next buttons */}
+        <div className="mb-5 flex justify-between text-center space-x-10 ">
+          <button onClick={handlePrevDay} className="hover:text-red-500 font-semibold">Prev</button>
+          <span className="text-xl font-bold px-4 py-2 ">
+            {selectedDay.getDate()} {selectedDay.toLocaleString('default', 
+            { month: 'long' })} {selectedDay.getFullYear()}
+          </span>
+          <button onClick={handleNextDay} className="hover:text-red-500 font-semibold">Next</button>
+        </div>
 
-      <div className="grid grid-cols-12 gap-5">
-        <div className="col-span-12 relative w-full">
-          {/* Time slots */}
-          <div className="space-y-10 pl-2 pt-1">
-            {timeSlots.map((slot, index) => (
-              <div key={index} className="relative w-full">
-                <div className="text-sm text-gray-500 h-30">{slot}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Show events at the correct time slot */}
-          {groupedEvents[formatDate(selectedDay)] &&
-            groupedEvents[formatDate(selectedDay)].map((event, index) => {
-              const { topPosition, eventHeight } = getEventPosition(event); // Calculate event position and height
-              return (
-                <div
-                  key={index}
-                  className="absolute bg-red-500 text-white p-2 rounded"
-                  style={{
-                    top: `${topPosition}rem`, // Set top position based on time
-                    height: `${eventHeight}rem`, // Set height based on duration
-                    width: '100%',
-                  }}
-                >
-                  <p className="font-semibold">{event.name}</p>
-                  <p className="text-sm">
-                    {event.startTime} - {event.endTime}
-                  </p>
+        <div className="grid grid-cols-12 gap-5">
+          <div className="col-span-12 relative w-full">
+            {/* Time slots */}
+            <div className="space-y-10 pl-2 pt-1">
+              {timeSlots.map((slot, index) => (
+                <div key={index} className="relative w-full ">
+                  <div className=" ">{slot}</div> 
                 </div>
-              );
-            })}
+              ))}
+            </div>
+
+            {/* Show events at the correct time slot */}
+            {groupedEvents[formatDate(selectedDay)] &&
+              groupedEvents[formatDate(selectedDay)].map((event, index) => {
+                const { topPosition, eventHeight } = getEventPosition(event); // Calculate event position and height
+                return (
+                  <div
+                    key={index}
+                    className="absolute bg-red-500 text-white p-2 rounded"
+                    style={{
+                      top: `${topPosition}rem`, // Set top position based on time
+                      height: `${eventHeight}rem`, // Set height based on duration
+                      width: '100%',
+                    }}
+                  >
+                    <p className="font-semibold">{event.name}</p>
+                    <p className="text-sm">
+                      {event.startTime} - {event.endTime}
+                    </p>
+                  </div>
+                );
+              })}
+          </div>
         </div>
       </div>
     </div>
