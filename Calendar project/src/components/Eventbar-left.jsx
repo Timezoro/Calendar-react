@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import useAppointments from '../hooks/useAppointments';
+import ClearSharpIcon from '@mui/icons-material/ClearSharp';
 
 const EventBar = ({ events, onAddEvent }) => {
   const [showAddEventForm, setShowAddEventForm] = useState(false);
@@ -7,6 +9,10 @@ const EventBar = ({ events, onAddEvent }) => {
   const [eventTimeStart, setEventTimeStart] = useState('');
   const [eventTimeEnd, setEventTimeEnd] = useState('');
   const [eventDesciption,setEventDesciption] = useState('');
+
+
+  const { deleteAppointment } = useAppointments();
+
   const handleAddEvent = () => {
     if (eventName && eventDate && eventTimeStart && eventTimeEnd) {
       onAddEvent({ name: eventName, date: eventDate, time_start: eventTimeStart, time_end: eventTimeEnd,desc: eventDesciption });
@@ -82,8 +88,12 @@ const EventBar = ({ events, onAddEvent }) => {
           ) : (
             <ul className="mt-4 ">
               {events.map((event, index) => (
-                <li key={index} className="border-b border-gray-300 py-2 h-full hover:shadow-md cursor-pointer">
-                  <strong class= "">{event.name}</strong>  <span className = "font-semibold">{event.date} </span> <br /> <span>at {event.time_start} until {event.time_end}</span>
+                <li key={index} className="border-b border-gray-300 py-2 h-full hover:shadow-sm cursor-pointer flex-col">
+                  <strong class= "">{event.name}</strong>  
+                  <span className = "font-semibold">{event.date} </span> 
+                  <ClearSharpIcon onClick={() => deleteAppointment(event.id)} className="float-end text-slate-600 cursor-pointer hover:text-red-500 hover:text-3xl" />
+                  <br /> 
+                  <span>at {event.time_start} until {event.time_end}</span>
                 </li>
               ))}
             </ul>
@@ -101,3 +111,4 @@ const EventBar = ({ events, onAddEvent }) => {
 };
 
 export default EventBar;
+
