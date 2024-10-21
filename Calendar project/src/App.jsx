@@ -4,7 +4,7 @@ import NavBar from './components/Navbar-top';
 import EventBar from './components/Eventbar-left';
 import Calendar from './components/Calendar';
 import CalendarWeek from './components/Calendar-week';
-import CalendarDay from './components/Calendar-day';
+import CalendarDay from './components/Calendar-day.jsx';
 import useAppointments from './hooks/useAppointments';
 
 
@@ -36,7 +36,6 @@ function MainContent({ events, addEvent }) {
   );
 }
 
-
 function App() {
   const [events, setEvents] = useState([]);
 
@@ -48,8 +47,7 @@ function App() {
       setEvents(data)
     })
     
-  }, [deleteAppointment, addAppointment]);
-
+  }, [deleteAppointment, addAppointment ]);
 
 
   const addEvent = (event) => {

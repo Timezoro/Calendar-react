@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import EventBar from './Eventbar-left';
 
-const CalendarDay = ({ events }) => {
+const CalendarDay = ({ events, onAddEvent }) => {
   const [selectedDay, setSelectedDay] = useState(new Date()); // Start with the current day
   const formatDate = (date) => date.toDateString();
 
@@ -25,7 +25,7 @@ const CalendarDay = ({ events }) => {
           <br />
           <br />
           <br />
-          <span className="w-full inline-block border-b-2 border-gray-100 hover:text-red-500">0{i}:30</span>
+          {/* <span className="w-full inline-block border-b-2 border-gray-100 hover:text-red-500">0{i}:30</span> */}
         </div>
       ) : (
         <div className='text-sm text-gray-500'>
@@ -33,7 +33,7 @@ const CalendarDay = ({ events }) => {
           <br />
           <br />
           <br />
-          <span className="w-full inline-block border-b-2 border-gray-100 hover:text-red-500">{i}:30</span>
+          {/* <span className="w-full inline-block border-b-2 border-gray-100 hover:text-red-500">{i}:30</span> */}
           {i === 23 && (
             <span>
               <br />
@@ -44,12 +44,20 @@ const CalendarDay = ({ events }) => {
           )}
         </div>
       );
-      slots.push(timeLabel);
+      slots.push({timeLabel, startHour: i, endHour: i + 1});
     }
     return slots;
   };
 
-  const timeSlots = generateTimeSlots();
+
+  const [timeSlots, setTimeSlots] = useState([]);
+
+  useEffect(() => {
+
+    setTimeSlots(generateTimeSlots());
+    
+
+  }, []);
 
   const getEventPosition = (event) => {
     const startTime = new Date(`1970-01-01T${event.startTime}:00`);
@@ -82,8 +90,8 @@ const CalendarDay = ({ events }) => {
 
   return (
     <div className="flex h-screen">
-      <div className='w-1/5 pt-4 '>
-        {/* <EventBar events={events} /> */}
+      <div className=' w-1/5 pt-4 p-5'>
+        <EventBar className = "flex"events={events} onClick = {onAddEvent}/>
       </div>
       <div className ="w-4/5 overflow-auto p-3 cursor-pointer"> 
       {/* Header with Prev/Next buttons */}
@@ -99,35 +107,47 @@ const CalendarDay = ({ events }) => {
         <div className="grid grid-cols-12 gap-5">
           <div className="col-span-12 relative w-full">
             {/* Time slots */}
-            <div className="space-y-10 pl-2 pt-1">
-              {timeSlots.map((slot, index) => (
-                <div key={index} className="relative w-full ">
-                  <div className=" ">{slot}</div> 
-                </div>
-              ))}
+            <div className="space-y-10 pl-2 pt-1 flex flex-col">
+              {
+                Array.from({length: 24}, (_, i) => {
+                  const timeLabel = i < 10 ? `0${i}:00` : `${i}:00`;
+                  return (
+                    <div key={i} className="relative w-full h-full">
+                      <div className="text-sm text-gray-500 h-full flex flex-col gap-5">
+                        <span className=" w-full border-b-2 border-gray-300 hover:text-red-500">{timeLabel}</span>
+                      {/* Show events at the correct time slot */}
+                      {groupedEvents[formatDate(selectedDay)] &&
+                        groupedEvents[formatDate(selectedDay)].map((event, index) => {
+                          const { topPosition, eventHeight } = getEventPosition(event); // Calculate event position and height
+
+                          //get 2 first digits of the time_start
+                          const isItThisHour = event.time_start.substring(0, 2) === timeLabel.substring(0, 2);
+
+                          if (!isItThisHour) return null;
+                          return (
+                            <div
+                              key={index}
+                              className=" bg-red-500 text-white p-2 rounded h-full hover:bg-red-600" 
+                              style={{
+                                top: `${topPosition}rem`, // Set top position based on time
+                                height: `${eventHeight}rem`, // Set height based on duration
+                                width: '100%',
+                              }}
+                            >
+                              <p className="font-semibold">{event.name}</p>
+                              <p className="text-sm"> {event.time_start} - {event.time_end} </p>
+                              
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })
+              }
             </div>
 
-            {/* Show events at the correct time slot */}
-            {groupedEvents[formatDate(selectedDay)] &&
-              groupedEvents[formatDate(selectedDay)].map((event, index) => {
-                const { topPosition, eventHeight } = getEventPosition(event); // Calculate event position and height
-                return (
-                  <div
-                    key={index}
-                    className="absolute bg-red-500 text-white p-2 rounded"
-                    style={{
-                      top: `${topPosition}rem`, // Set top position based on time
-                      height: `${eventHeight}rem`, // Set height based on duration
-                      width: '100%',
-                    }}
-                  >
-                    <p className="font-semibold">{event.name}</p>
-                    <p className="text-sm">
-                      {event.startTime} - {event.endTime}
-                    </p>
-                  </div>
-                );
-              })}
+
           </div>
         </div>
       </div>

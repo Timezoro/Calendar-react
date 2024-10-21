@@ -68,7 +68,7 @@ const CalendarWeek = ({ events }) => {
                   groupedEvents[selectedDay.fullDate].map((event, index) => (
                     <div key={index} className="bg-gray-100 p-2 rounded">
                       <p className="font-semibold">{event.name}</p>
-                      <p className="text-sm">{event.startTime} - {event.endTime}</p>
+                      <p className="text-sm">{event.time_start} - {event.time_end}</p>
                     </div>
                   ))
                 ) : (
